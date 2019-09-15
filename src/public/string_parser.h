@@ -43,7 +43,25 @@ namespace atlib {
     }
     
     static size_t countWords(const std::string& s, const std::string& delims) {
-      return 1;
+      if (delims.empty())
+        return 0u;
+      
+      size_t count = 0u;
+      size_t prev = 0u;
+      size_t curr = s.find_first_of(delims);
+      while (curr != std::string::npos) {
+        const auto word = s.substr(prev, curr - prev);
+        if (!word.empty())
+          ++count;
+        
+        prev = curr + 1;
+        curr = s.find_first_of(delims, prev);
+      }
+      const auto lastWord = s.substr(prev, curr - prev);
+      if (!lastWord.empty())
+        ++count;
+      
+      return count;
     };
   }; // class string_parser
 } // namespace
